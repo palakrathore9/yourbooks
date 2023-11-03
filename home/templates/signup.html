@@ -1,0 +1,167 @@
+<!-- signup.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" integrity="sha384-+p30BxI4JgyspkZY1FV2pAz1rQJdgHO8IKoWDEeJFS3+RG&oe=5gGzQp5P" crossorigin="anonymous">
+    <!-- Google Fonts - Poppins for body and navbar -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&display=swap">
+    <style>
+        body {
+            background-color: pink;
+            color: black;
+            font-family: 'Poppins', sans-serif;
+        }
+        .navbar {
+            background-color: palevioletred;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+        .navbar-brand {
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
+        .navbar-toggler {
+            border-color: white;
+        }
+        .navbar-nav .nav-link {
+            color: white;
+        }
+        .navbar-nav .nav-link.active {
+            font-weight: bold;
+        }
+        /* Styling for the form */
+        .signup-container {
+            max-width: 400px;
+            margin: 20px auto; /* Add space between navbar and form */
+            padding: 20px;
+            border: 1px solid pink;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+        }
+        .signup-header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .signup-form {
+            text-align: center; /* Center-align the form */
+            margin: 0 auto; /* Center the form horizontally */
+        }
+        .signup-form input {
+            width: 100%;
+            margin: 5px 0; /* Add space between fields */
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .signup-button {
+            background-color: palevioletred;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .form-instructions {
+            text-align: center;
+            font-weight: bold;
+            color: red;
+        }
+        .hide-label {
+            display: none;
+        }
+        .login-link {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark p-4"> <!-- Updated class name and removed data-mdb attributes -->
+        <div class="container-fluid">
+            <a class="navbar-brand brand-name" href="/">yourbooks</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <!-- Updated data attributes -->
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recommend">Recommend</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <div class="dropdown-toggle-box"> <!-- Added a box around the dropdown content -->
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Hi {{ user.username }}
+                            </a>
+                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+                            <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                        </ul>
+                    </li>
+                    
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'signup' %}">Signup</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="signup-container">
+                    <h2 class="signup-header">Sign Up</h2>
+                    <form method="post" class="signup-form">
+                        {% csrf_token %}
+                        <!-- Add placeholders to the input fields -->
+                        <input type="text" name="{{ form.username.name }}" placeholder="Username">
+                        <br>
+                        <input type="password" name="{{ form.password1.name }}" placeholder="Password">
+                        <br>
+                        <input type="password" name="{{ form.password2.name }}" placeholder="Confirm Password">
+                        <button type="submit" class="signup-button">Sign Up</button>
+                    </form>
+                    {% if form.errors %}
+                        <p class="form-instructions">Please correct the errors in the form.</p>
+                        <ul>
+                            {% for error in form.username.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            {% for error in form.password1.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                            {% for error in form.password2.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <p class="login-link">Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-V0FfJTRKp+p2gqKAa1PM/O4w4K/3Sts5wFzruLrfBf7aiRODG0RQ6sFSy6o4oFd5&crossorigin="anonymous"></script>
+</body>
+</html>
+
+
